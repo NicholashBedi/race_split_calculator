@@ -4,16 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Today's Date</title>
+    <title>Race Split</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-
 <h3 id="po">Splits</h3>
-<input id="number_of_splits" min=0 max=100 value=2 placeholder="Number of Splits" type="number" />
-<input type="submit" onclick="display_split_inputs()">
+<input id = "mile_time" min=0 placeholder="Aproximate Mile Time" type="number" />
+
+<div id="base_splits">
+</div>
+
+<div id = "buttons">
+  <input type="submit" value="Add Split" onclick="add_split()">
+  <br>
+  <input type="submit" value="Calculate" onclick="calculate()">
+</div>
+
 
 <p id="result"> </p>
 
