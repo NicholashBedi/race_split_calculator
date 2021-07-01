@@ -1,11 +1,6 @@
 let number_of_splits = 0;
 add_split()
 add_split()
-function split_HTML(){
-
-  distance = "<input id = 'distance1' min=0 type='number' placeholder='Distance From Start'>"
-  time = "<input id = 'time1' min=0 placeholder='Time From Start' type='number' />"
-}
 
 function add_split(){
     number_of_splits += +1
@@ -19,10 +14,11 @@ function add_split(){
     newdiv.setAttribute("id", "split_number" + number_of_splits);
 
     distance_input.setAttribute("type", "number");
-    distance_input.setAttribute("placeholder", "Distance From Start");
-    distance_input.setAttribute("id", "distance" + number_of_splits);
+    distance_input.setAttribute("placeholder", "Distance (km) From Start");
+    distance_input.setAttribute("id", "distance " + number_of_splits);
+    distance_input.setAttribute("name", "distance[]");
     time_input.setAttribute("type", "number");
-    time_input.setAttribute("placeholder", "Split (seconds)");
+    time_input.setAttribute("placeholder", "Time to reach split (seconds)");
     time_input.setAttribute("id", "time" + number_of_splits);
     time_input.setAttribute("name", "time[]");
     remove_split.setAttribute("type", "submit");
@@ -42,13 +38,35 @@ function remove_split(i) {
 }
 
 function calculate() {
-  var input_array = document.getElementsByName('time[]')
-  let sum = 0
-  for (var i = 0; i<input_array.length; i++) {
-    var p = input_array[i].value;
-    sum += +p;
+  // May want to change how this is input
+  var mile_time = document.getElementById("mile_time").value
+  var factor = mile_time * 2.5
+  var time_splits = document.getElementsByName('time[]')
+  var distance_splits = document.getElementsByName('distance[]')
+  let total_time = 0
+  let total_distance = distance_splits[time_splits.length - 1].value
+  for (var i = 0; i<time_splits.length; i++) {
+    total_time += +time_splits[i].value;
   }
-  document.getElementById("result").innerHTML = sum;
-  console.log(sum)
-  return sum
+  let total_effective_distace = 0
+  let total_pace = total_time/ total_distance
+  for (var i = 0; i<time_splits.length; i++) {
+    var pace_for_split = 0
+    var split_distance = 0
+    if (i == 0) {
+      pace_for_split = time_splits[0].value/distance_splits[0].value
+      split_distance = distance_splits[0].value
+    } else {
+      split_distance = distance_splits[i].value - distance_splits[i-1].value
+      pace_for_split = (time_splits[i].value - time_splits[i-1].value)/split_distance
+    }
+    var difference_in_pace = total_pace - pace_for_split
+    var effective_split_distance = split_distance * Math.pow(2, difference_in_pace/factor)
+
+    total_effective_distace += effective_split_distance
+  }
+  var pace_difference = factor * Math.log2(total_effective_distace/total_distance)
+  var new_time = (total_pace - pace_difference) * total_distance
+
+  document.getElementById("result").innerHTML = new_time;
 }
