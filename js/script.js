@@ -43,11 +43,8 @@ function calculate() {
   var factor = mile_time * 2.5
   var time_splits = document.getElementsByName('time[]')
   var distance_splits = document.getElementsByName('distance[]')
-  let total_time = 0
+  let total_time = time_splits[time_splits.length - 1].value
   let total_distance = distance_splits[time_splits.length - 1].value
-  for (var i = 0; i<time_splits.length; i++) {
-    total_time += +time_splits[i].value;
-  }
   let total_effective_distace = 0
   let total_pace = total_time/ total_distance
   for (var i = 0; i<time_splits.length; i++) {
